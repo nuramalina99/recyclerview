@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,25 +58,17 @@ public class MainActivity extends AppCompatActivity {
             holder.textView4.setText(elements.get(position).getName());
             holder.textView5.setText(elements.get(position).getDescription());
             holder.imageView.setImageResource(elements.get(position).getIcon());
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(MainActivity.this, elements.get(position).getName()+" pressed.", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
         @Override
-        public int getItemCount() {
-            return elements.size();
-        }
+        public int getItemCount() { return elements.size(); }
         public void addElements(Version[] versions) {
             elements.clear();
             elements.addAll(Arrays.asList(versions));
             notifyDataSetChanged();
         }
 
-        class MyViewHolder extends RecyclerView.ViewHolder {
+        class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             public TextView textView4;
             public TextView textView5;
             public ImageView imageView;
@@ -85,7 +78,16 @@ public class MainActivity extends AppCompatActivity {
                 textView4 = itemView.findViewById(R.id.versiontitle);
                 textView5 = itemView.findViewById(R.id.versionnumber);
                 imageView = itemView.findViewById(R.id.icon);
+                itemView.setOnClickListener(this);
+            }
 
+            @Override
+            public void onClick(View v) {
+                String name = elements.get(getAdapterPosition()).getName();
+                Intent intent = new Intent(MainActivity.this,
+                        DetailsActivity.class);
+                intent.putExtra("name", name);
+                startActivity(intent);
             }
         }
     }
